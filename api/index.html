@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Gurmukhi&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../node_modules/bootstrap-icons/font/bootstrap-icons.css">
+    <script src="../js/app.js"></script>
+    <title>Document</title>
+    <style>
+        img{
+            width: 50px;
+        }
+        .size{
+            width: 250px;
+        }
+        .font-family{
+            font-family: 'Tiro Gurmukhi', serif;
+        }
+        .del{
+            display: none;
+        }
+        tr:hover .del{
+            display: block;
+        }
+    </style>
+</head>
+<body onbeforeprint="myFunction()">
+    <div class="container">
+        <div class="row">
+            <div class="col mt-3">
+                <div>
+                    <h3 class="text-center font-family">Market Place</h3>
+                    <h3 class="text-center font-family">Summer Safe</h3>
+                    <h3 class="text-center font-family">We don't count cent because of safe!</h3>
+                </div>
+            </div>
+        </div>
+        <form action="" id="input" class="p-4 d-print-none">
+            <div class="row justify-content-center ">
+                <div class="col-3 mt-3">
+                   <select name="" class="form-select w-100" id="select"></select>
+                </div>
+                <div class="col-3 mt-3">
+                    <input type="number" class="form-control w-100" id="search" placeholder="Search...">
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-primary text-white btn-lg w-100 h-100" id="btn">Search</button>
+                </div>
+            </div>
+        </form>
+        <table class="w-100 table">
+            <thead>
+                <th>Title</th>
+                <th class="text-end">Price</th>
+                <th class="text-end">Rating</th>
+                <th class="text-end">Quantity</th>
+                <th class="text-end">image</th>
+                <th class="text-end">Cost</th>
+            </thead>
+            <tbody id="row"></tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="5" class="text-center">Total</th>
+                    <th id="total">0</th>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="text-end mt-4">
+            <button class="btn btn-lg btn-outline-primary d-print-none" onclick="print()"><i class="bi-printer"></i></button>
+        </div>
+    </div>
+    <script>
+        let select =document.querySelector("#select");
+        let search =document.querySelector("#search");
+        let btn =document.querySelector("#btn");
+
+        products.forEach(function(product){
+            let option = new Option(product.title);
+            select.append(option);
+        });
+
+        function myFunction() {
+             alert("You are about to print!");
+        };
+
+        function deleted(event){
+            if(confirm("Are you wanna delete this item?")){
+            event.target.parentElement.parentElement.remove();               
+            let cost1 = document.querySelectorAll("#cost");
+            let totalcost = [...cost1].reduce(function(pv,cv){
+                return pv+parseInt(cv.innerText);
+            },0);
+            total.innerHTML = totalcost;
+            };
+
+        };
+        function calculate(){
+            let cost1 = document.querySelectorAll("#cost");
+            let totalcost = [...cost1].reduce(function(pv,cv){
+                return pv+parseInt(cv.innerText);
+            },0)
+            total.innerHTML = totalcost;
+        };
+
+        input.addEventListener("submit",function(event){
+            event.preventDefault();
+            let cal = products.find(function(product){
+                return product.title == select.value;
+            });
+            let cost = cal.price*search.valueAsNumber;
+            console.log(cost);
+            let tr = document.createElement("tr");
+            tr.innerHTML=`
+            <th class="size">${cal.title}<button class="btn btn-sm rounded-5 btn-outline-danger del" onclick='deleted(event)'">Del</button></th>
+            <th class="text-end">${cal.price}</th>
+            <th class="text-end">${cal.rating.rate}</th>
+            <th class="text-end">${search.valueAsNumber}</th>
+            <th class="text-end"><img src="${cal.image}" class="img"</th>
+            <th class="text-end " id="cost">${cost}</th>
+            `;
+            row.append(tr);
+            calculate();
+        });
+    </script>
+</body>
+</html>
